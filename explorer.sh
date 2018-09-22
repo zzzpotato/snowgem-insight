@@ -63,7 +63,7 @@ cat << EOF > bitcore-node.json
 
 EOF
 
-# create snowgem.conf
+# create zero.conf
 cat << EOF > data/zero.conf
 server=1
 #whitelist=127.0.0.1
