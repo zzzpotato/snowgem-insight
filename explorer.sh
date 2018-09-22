@@ -2,17 +2,17 @@
 
 D=$PWD
 
-sudo apt-get install \
-      build-essential pkg-config libc6-dev m4 g++-multilib \
-      autoconf libtool ncurses-dev unzip git python python-zmq \
-      zlib1g-dev wget bsdmainutils automake curl
+#sudo apt-get install \
+#      build-essential pkg-config libc6-dev m4 g++-multilib \
+#      autoconf libtool ncurses-dev unzip git python python-zmq \
+#      zlib1g-dev wget bsdmainutils automake curl
 
 # build zend patched with addressindexing support
-git clone https://github.com/snowgem/snowgem-indexing
-cd snowgem-indexing
-chmod +x zcutil/build.sh depends/config.guess depends/config.sub autogen.sh share/genbuild.sh src/leveldb/build_detect_platform
-./zcutil/fetch-params.sh
-./zcutil/build.sh --disable-rust
+#git clone https://github.com/snowgem/snowgem-indexing
+#cd snowgem-indexing
+#chmod +x zcutil/build.sh depends/config.guess depends/config.sub autogen.sh share/genbuild.sh src/leveldb/build_detect_platform
+#./zcutil/fetch-params.sh
+#./zcutil/build.sh --disable-rust
 
 # install npm and use node v4
 cd ..
@@ -24,14 +24,14 @@ sudo n 4
 sudo apt-get -y install libzmq3-dev
 
 # install snowgem version of bitcore
-npm install snowgem/bitcore-node-snowgem
+npm install https://github.com/LEAD-Anoy74/bitcore-node-zeroclassic
 
 # create bitcore node
-./node_modules/bitcore-node-snowgem/bin/bitcore-node create snowgem-explorer
-cd snowgem-explorer
+./node_modules/bitcore-node-zeroclassic/bin/bitcore-node create zeroclassic-explorer
+cd zeroclassic-explorer
 
 # install insight api/ui
-../node_modules/bitcore-node-snowgem/bin/bitcore-node install snowgem/insight-api-snowgem snowgem/insight-ui-snowgem
+../node_modules/bitcore-node-zeroclassic/bin/bitcore-node install https://github.com/LEAD-Anoy74/insight-api-zeroclassic https://github.com/LEAD-Anoy74/insight-ui-zeroclassic
 
 # create bitcore config file for bitcore
 cat << EOF > bitcore-node.json
@@ -40,21 +40,21 @@ cat << EOF > bitcore-node.json
   "port": 3001,
   "services": [
     "bitcoind",
-    "insight-api-snowgem",
-    "insight-ui-snowgem",
+    "insight-api-zeroclassic",
+    "insight-ui-zeroclassic",
     "web"
   ],
   "servicesConfig": {
     "bitcoind": {
       "spawn": {
         "datadir": "./data",
-        "exec": "../snowgem-indexing/src/snowgemd"
+        "exec": "~/zeroclassic/zerod"
       }
     },
-     "insight-ui-snowgem": {
+     "insight-ui-zeroclassic": {
       "apiPrefix": "api"
      },
-    "insight-api-snowgem": {
+    "insight-api-zeroclassic": {
       "routePrefix": "api"
     }
   }
@@ -64,9 +64,9 @@ cat << EOF > bitcore-node.json
 EOF
 
 # create snowgem.conf
-cat << EOF > data/snowgem.conf
+cat << EOF > data/zero.conf
 server=1
-whitelist=127.0.0.1
+#whitelist=127.0.0.1
 txindex=1
 addressindex=1
 timestampindex=1
@@ -82,7 +82,7 @@ maxconnections=1000
 
 EOF
 
-cd snowgem-explorer
+cd zeroclassic-explorer
 
 echo "Start the block explorer, open in your browser http://server_ip:3001"
-echo "./node_modules/bitcore-node-snowgem/bin/bitcore-node start"
+echo "./node_modules/bitcore-node-zeroclassic/bin/bitcore-node start"
